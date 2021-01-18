@@ -9,6 +9,7 @@ from flask import jsonify, abort, Blueprint
 from controllers.OneAdderController import OneAdder
 from controllers.TwoAdderController import TwoAdder
 from controllers.ThreeAdderController import ThreeAdder
+from controllers.PipelineController import Pipeline
 from . import routes
 
 @routes.route('/oneadder', methods=['GET'])
@@ -34,3 +35,7 @@ def greeting_three():
 @routes.route('/threeadder/<num>', methods=['GET'])
 def three_adder(num):
     return ThreeAdder.adder(num)
+
+@routes.route('/pipeline/<num>', methods=['GET'])
+def pipeline_input(num):
+    return Pipeline.additionChain(num)

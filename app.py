@@ -10,4 +10,4 @@ def hello():
     return jsonify(about='Hello, WP! Welcome to the pipeline.')
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    app.run(host="localhost", debug=True, port=5000)

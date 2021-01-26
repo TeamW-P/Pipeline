@@ -1,0 +1,8 @@
+name: pipeline_env
+channels:
+  - anaconda 
+  - bioconda
+dependencies:
+  - python=3.8
+  - flask
+  - gunicorn

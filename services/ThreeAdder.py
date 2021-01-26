@@ -2,7 +2,7 @@
 # it'll only be pure http call, as in send the inputs and receive the outputs
 # manipulation of that data should be done elsewhere
 import requests 
-URL = 'http://127.0.0.1:5003/'
+URL = 'http://three_adder:5003/'
 
 def greeting():
     r = requests.get(url = URL) 

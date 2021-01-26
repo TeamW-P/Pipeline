@@ -4,6 +4,7 @@
 from services.OneAdder import adder as oneAdder
 from services.TwoAdder import adder as twoAdder
 from services.ThreeAdder import adder as threeAdder
+
 class Pipeline:
 
     @staticmethod

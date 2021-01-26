@@ -5,9 +5,9 @@
 # SAMPLE
 
 import requests 
-  
+
 # api-endpoint 
-URL = 'http://127.0.0.1:5001/'
+URL = 'http://one_adder:5001/'
   
 # defining a params dictionary for the parameters to be sent to the API 
 # PARAMS = {'address':location} 
@@ -27,6 +27,6 @@ def greeting():
     return data
 
 def adder(input):
-    r = requests.get(url = URL + input) 
+    r = requests.get(url = URL + input)
     data = r.json() 
     return data

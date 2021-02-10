@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  # Proxies requests to internal services
+  reverse-proxy:
+    image: nginx:1.19.6
+    container_name: reverse_proxy
+    depends_on:
+        - pipeline
+    volumes:
+      - ./ReverseProxy/nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - 80:80
+
+  pipeline:
+    image: pipeline
+    container_name: pipeline
+    build:
+      context: ./Pipeline
+    ports:
+      - 5000:5000
+    restart: on-failure
+
+networks:
+  default:
+    external:
+      name: PipelineNetwork

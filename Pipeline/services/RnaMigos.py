@@ -2,14 +2,9 @@
 # it'll only be pure http call, as in send the inputs and receive the outputs
 # manipulation of that data should be done elsewhere
 import requests 
-URL = "http://two_adder:5002/" 
+URL = "http://rnamigos:5002/" 
 
 def greeting():
     r = requests.get(url = URL) 
-    data = r.json() 
-    return data
-
-def adder(input):
-    r = requests.get(url = URL + input)
     data = r.json() 
     return data

@@ -1,41 +1,32 @@
-# routing for the pipeline service will be done here, 
-# aka whenever there's a call to the backend, this is where it will be received
-
-# we'll have whatever endpoints we made available in the API here
-# the endpoints here will call whichever service needed to get the required info
-# then call helper functions to manipulate the data as needed
-
-from flask import jsonify, abort, Blueprint
-from controllers.OneAdderController import OneAdder
-from controllers.TwoAdderController import TwoAdder
-from controllers.ThreeAdderController import ThreeAdder
+from flask import jsonify, abort, Blueprint, request
+from controllers.BayesPairingController import BayesPairing
+from controllers.RnaMigosController import RnaMigos
+from controllers.VernalController import Vernal
 from controllers.PipelineController import Pipeline
 from . import routes
 
-@routes.route('/oneadder', methods=['GET'])
-def greeting_one():
-    return OneAdder.greeting()
+@routes.route('/pipeline', methods=['GET'])
+def pipeline():
+    # output is either the json output or an error string depending on the status of valid
+    valid, output = Pipeline.pipeline(request.args)
+    if not (valid):
+        abort(400, description=output)
 
-@routes.route('/oneadder/<num>', methods=['GET'])
-def one_adder(num):
-    return OneAdder.adder(num)
+    return output
 
-@routes.route('/twoadder', methods=['GET'])
-def greeting_two():
-    return TwoAdder.greeting()
+@routes.route('/bayespairing', methods=['GET'])
+def bayespairing():
+    # output is either the json output or an error string depending on the status of valid
+    valid, output = BayesPairing.bayespairing(request.args)
+    if not (valid):
+        abort(400, description=output)
 
-@routes.route('/twoadder/<num>', methods=['GET'])
-def two_adder(num):
-    return TwoAdder.adder(num)
+    return output
 
-@routes.route('/threeadder', methods=['GET'])
-def greeting_three():
-    return ThreeAdder.greeting()
+@routes.route('/rnamigos', methods=['GET'])
+def greeting_rna_migos():
+    return RnaMigos.greeting()
 
-@routes.route('/threeadder/<num>', methods=['GET'])
-def three_adder(num):
-    return ThreeAdder.adder(num)
-
-@routes.route('/pipeline/<num>', methods=['GET'])
-def pipeline_input(num):
-    return Pipeline.additionChain(num)
+@routes.route('/vernal', methods=['GET'])
+def greeting_vernal():
+    return BayesPairing.greeting()

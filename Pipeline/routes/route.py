@@ -109,9 +109,43 @@ def get_graphs_per_module():
         abort(400, "Failed to retrieve representative graphs. Please check your inputs. Error: " + str(e))
 
 
-@routes.route('/rnamigos', methods=['GET'])
-def greeting_rna_migos():
-    return RnaMigos.greeting()
+@routes.route('/rnamigos_file', methods=['POST'])
+def rnamigos_file():
+    '''
+    Represents the RnaMigos endpoint for file input.
+
+    :returns: jsonified RnaMigos output
+    '''
+    try:
+        if "graphs" not in request.files:
+            abort(400, description="Did not receive an input file.")
+        result = RnaMigos.rnamigos_file(
+            request.files.get("graphs"), request.files.get("library") if "library" in request.files else None)
+        if (result):
+            return result.json()
+
+        abort(result.status_code, result.json().get("error"))
+    except Exception as e:
+        abort(400, "RnaMigos failed to process data. Please check your inputs or BayesPairing. Error: " + str(e))
+
+
+@routes.route('/rnamigos_string', methods=['POST'])
+def rnamigos_string():
+    '''
+    Represents the RnaMigos endpoint for string input.
+
+    :returns: RnaMigos BayesPairing output
+    '''
+    try:
+        if not request.form or "graphs" not in request.form:
+            abort(400, description="Did not receive any arguments.")
+        result = RnaMigos.rnamigos_string(request.form.to_dict())
+        if (result):
+            return result.json()
+
+        abort(result.status_code, result.json().get("error"))
+    except Exception as e:
+        abort(400, "RnaMigos failed to process data. Please check your inputs or BayesPairing. Error: " + str(e))
 
 
 @routes.route('/vernal', methods=['GET'])

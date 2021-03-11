@@ -2,8 +2,10 @@
 # basically whatever data manipulation, or combination of service calls we need to do will happen here
 # the routing functions will basically call the controller functions to do what needs to be done
 from services.Vernal import *
+
 class Vernal:
 
     @staticmethod
-    def greeting():
-        return greeting()
+    def vernalSimilarityFunction(representative_graphs, dataset):
+        print(type(representative_graphs), type(dataset))
+        return vernalSimilarityFunction(representative_graphs, dataset)

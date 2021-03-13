@@ -1,4 +1,4 @@
-from flask import jsonify, abort, Blueprint, request
+from flask import jsonify, abort, Blueprint, request, make_response
 from controllers.BayesPairingController import BayesPairing
 from controllers.RnaMigosController import RnaMigos
 from controllers.VernalController import Vernal
@@ -41,6 +41,7 @@ def pipeline_string():
         code, result = Pipeline.pipeline_string(request.form, request.files)
         if (code == 200):
             return jsonify(result)
+
 
         abort(code, result.get("error"))
     except Exception as e:
@@ -113,7 +114,18 @@ def get_graphs_per_module():
 def greeting_rna_migos():
     return RnaMigos.greeting()
 
+@routes.route('/vernal', methods=['POST'])
+def vernal_execution():
+    output = ""
+    try: 
+        output = Vernal.vernalSimilarityFunction(representative_graphs=request.form.get("graphs"), dataset=request.form.get("dataset"))
+        print(output.json())
+        return str(output.json())
+        
+        
+    except Exception as e:
+        abort(400, "Vernal encountered an error while processing data: " + str(e))
 
-@routes.route('/vernal', methods=['GET'])
-def greeting_vernal():
-    return Vernal.greeting()
+
+
+

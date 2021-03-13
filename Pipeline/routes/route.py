@@ -3,6 +3,7 @@ from controllers.BayesPairingController import BayesPairing
 from controllers.RnaMigosController import RnaMigos
 from controllers.VernalController import Vernal
 from controllers.PipelineController import Pipeline
+import json
 from . import routes
 
 
@@ -116,13 +117,9 @@ def greeting_rna_migos():
 
 @routes.route('/vernal', methods=['POST'])
 def vernal_execution():
-    output = ""
     try: 
         output = Vernal.vernalSimilarityFunction(representative_graphs=request.form.get("graphs"), dataset=request.form.get("dataset"))
-        print(output.json())
-        return str(output.json())
-        
-        
+        return output.json()
     except Exception as e:
         abort(400, "Vernal encountered an error while processing data: " + str(e))
 

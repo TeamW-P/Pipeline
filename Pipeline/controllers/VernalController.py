@@ -7,5 +7,4 @@ class Vernal:
 
     @staticmethod
     def vernalSimilarityFunction(representative_graphs, dataset):
-        print(type(representative_graphs), type(dataset))
         return vernalSimilarityFunction(representative_graphs, dataset)

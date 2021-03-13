@@ -10,6 +10,6 @@ def vernalSimilarityFunction(representative_graphs, dataset):
     headers = {}
     files = []
     response = requests.request(
-        "POST", URL + "CompareSequence/", headers=headers, data=data, files=files)
+        "POST", URL + "compare-sequence/", headers=headers, data=data, files=files)
 
     return response

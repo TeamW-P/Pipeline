@@ -115,7 +115,7 @@ def greeting_rna_migos():
     return RnaMigos.greeting()
 
 @routes.route('/vernal', methods=['POST'])
-def vernal_file():
+def vernal_execution():
     output = ""
     try: 
         output = Vernal.vernalSimilarityFunction(representative_graphs=request.form.get("graphs"), dataset=request.form.get("dataset"))

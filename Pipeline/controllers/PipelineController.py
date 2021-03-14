@@ -1,5 +1,7 @@
+from flask import abort
 from .BayesPairingController import BayesPairing
-
+from .RnaMigosController import RnaMigos
+import json
 
 class Pipeline:
 
@@ -13,14 +15,8 @@ class Pipeline:
         :returns: a response containing all relevant output
         '''
         bp_input = files.get("bp_input")
-        rnamigos_library = files.get("rnamigos_library")
         vernal = arguments.get("vernal", default=1, type=int)
         rnamigos = arguments.get("rnamigos", default=1, type=int)
-
-        # TODO, stockholm handling
-        if (rnamigos and not rnamigos_library):
-            raise Exception(
-                "RNAMigos flag is set to true but received no ligand library for RNAMigos.")
 
         arguments = arguments.to_dict()
         arguments['get_graphs'] = 1
@@ -32,10 +28,16 @@ class Pipeline:
 
         bp_data = bp_result.json()
         motifs = bp_data.get("motif_graphs")
-
-        # TODO, pipelining
-
         bp_data.pop("motif_graphs", None)
+
+
+        if rnamigos == 1:
+            rnamigos_result = RnaMigos.rnamigos_string(str(motifs))
+            if rnamigos_result.status_code == 200:
+                rnamigos_data = rnamigos_result.json()
+                bp_data["rnamigos_result"] = rnamigos_data
+                return rnamigos_result.status_code, bp_data
+        
         return bp_result.status_code, bp_data
 
     @staticmethod
@@ -47,13 +49,8 @@ class Pipeline:
         :param files: a dictionary containing any relevant files (RNAMigos ligand library)
         :returns: a response containing all relevant output
         '''
-        rnamigos_library = files.get("rnamigos_library")
         vernal = arguments.get("vernal", default=1, type=int)
         rnamigos = arguments.get("rnamigos", default=1, type=int)
-
-        if (rnamigos and not rnamigos_library):
-            raise Exception(
-                "RNAMigos flag is set to true but received no ligand library for RNAMigos.")
 
         arguments = arguments.to_dict()
         arguments['get_graphs'] = 1
@@ -65,8 +62,13 @@ class Pipeline:
 
         bp_data = bp_result.json()
         motifs = bp_data.get("motif_graphs")
-
-        # TODO, pipelining
-
         bp_data.pop("motif_graphs", None)
+
+        if rnamigos == 1:
+            rnamigos_result = RnaMigos.rnamigos_string(str(motifs))
+            if rnamigos_result.status_code == 200:
+                rnamigos_data = rnamigos_result.json()
+                bp_data["rnamigos_result"] = rnamigos_data
+                return rnamigos_result.status_code, bp_data
+        
         return bp_result.status_code, bp_data

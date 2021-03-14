@@ -1,10 +1,20 @@
-# this is where we will make HTTP calls to the TwoAdder container
-# it'll only be pure http call, as in send the inputs and receive the outputs
-# manipulation of that data should be done elsewhere
 import requests 
-URL = "http://rnamigos:5002/" 
+import json
 
-def greeting():
-    r = requests.get(url = URL) 
-    data = r.json() 
-    return data
+# api-endpoint
+URL = "http://0.0.0.0:5002/" 
+
+
+def rnamigos_string(payload):
+    '''
+    Makes a call to the RnaMigos endpoint
+
+    :param payload: the payload to send
+    :return: the raw response from RnaMigos
+    '''
+    data = {"graphs": payload}
+    files = []
+    headers = {}
+    response = requests.request(
+        "POST", URL + "rnamigos-string", headers=headers, data=data, files=files)
+    return response

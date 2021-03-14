@@ -7,7 +7,7 @@ import json
 from . import routes
 
 
-@routes.route('/pipeline_file', methods=['POST'])
+@routes.route('/pipeline-file', methods=['POST'])
 def pipeline_file():
     '''
     Represents the pipeline endpoint for file input.
@@ -27,14 +27,13 @@ def pipeline_file():
         abort(400, "Pipeline failed to process data. Please check your inputs. Error: " + str(e))
 
 
-@routes.route('/pipeline_string', methods=['POST'])
+@routes.route('/pipeline-string', methods=['POST'])
 def pipeline_string():
     '''
     Represents the pipeline endpoint for string input.
 
     :returns: jsonified pipeline output consisting of BayesPairing, VeRNal and RNAMigos output
     '''
-    # TODO: add potential file input for VeRNAl & RNAMigos
     try:
         if ("sequence" not in request.form):
             abort("Did not receive arguments for BayesPairing.")
@@ -49,7 +48,7 @@ def pipeline_string():
         abort(400, "Pipeline failed to process data. Please check your inputs. Error: " + str(e))
 
 
-@routes.route('/bayespairing_file', methods=['POST'])
+@routes.route('/bayespairing-file', methods=['POST'])
 def bayespairing_file():
     '''
     Represents the BayesPairing endpoint for file input.
@@ -71,7 +70,7 @@ def bayespairing_file():
         abort(400, "BayesPairing failed to process data. Please check your inputs. Error: " + str(e))
 
 
-@routes.route('/bayespairing_string', methods=['POST'])
+@routes.route('/bayespairing-string', methods=['POST'])
 def bayespairing_string():
     '''
     Represents the BayesPairing endpoint for string input.
@@ -111,9 +110,23 @@ def get_graphs_per_module():
         abort(400, "Failed to retrieve representative graphs. Please check your inputs. Error: " + str(e))
 
 
-@routes.route('/rnamigos', methods=['GET'])
-def greeting_rna_migos():
-    return RnaMigos.greeting()
+@routes.route('/rnamigos-string', methods=['POST'])
+def rnamigos_string():
+    '''
+    For future use cases: Represents the RnaMigos endpoint for string input.
+
+    :returns: RnaMigos BayesPairing output
+    '''
+    try:
+        if not request.form or "graphs" not in request.form:
+            abort(400, description="Did not receive any arguments.")
+        result = RnaMigos.rnamigos_string(request.form.to_dict())
+        if (result):
+            return result.json()
+
+        abort(result.status_code, result.json().get("error"))
+    except Exception as e:
+        abort(400, "RnaMigos failed to process data. Please check your inputs or BayesPairing. Error: " + str(e))
 
 @routes.route('/vernal', methods=['POST'])
 def vernal_execution():

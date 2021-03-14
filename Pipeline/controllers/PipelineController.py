@@ -1,3 +1,4 @@
+from flask import abort
 from .BayesPairingController import BayesPairing
 from .RnaMigosController import RnaMigos
 import json
@@ -32,9 +33,10 @@ class Pipeline:
 
         if rnamigos == 1:
             rnamigos_result = RnaMigos.rnamigos_string(str(motifs))
-            rnamigos_data = rnamigos_result.json()
-            bp_data["rnamigos_result"] = rnamigos_data
-            return rnamigos_result.status_code, bp_data
+            if rnamigos_result.status_code == 200:
+                rnamigos_data = rnamigos_result.json()
+                bp_data["rnamigos_result"] = rnamigos_data
+                return rnamigos_result.status_code, bp_data
         
         return bp_result.status_code, bp_data
 
@@ -64,8 +66,9 @@ class Pipeline:
 
         if rnamigos == 1:
             rnamigos_result = RnaMigos.rnamigos_string(str(motifs))
-            rnamigos_data = rnamigos_result.json()
-            bp_data["rnamigos_result"] = rnamigos_data
-            return rnamigos_result.status_code, bp_data
+            if rnamigos_result.status_code == 200:
+                rnamigos_data = rnamigos_result.json()
+                bp_data["rnamigos_result"] = rnamigos_data
+                return rnamigos_result.status_code, bp_data
         
         return bp_result.status_code, bp_data

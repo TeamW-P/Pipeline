@@ -20,6 +20,8 @@ class Pipeline:
 
         arguments = arguments.to_dict()
         arguments['get_graphs'] = 1
+        # pdbs are not required in the context of pipeline processing, reduce output size by not including it
+        arguments['pdb'] = 0
         bp_result = BayesPairing.bayespairing_file(arguments, bp_input)
 
         # if we have an error, just return the error response
@@ -54,6 +56,8 @@ class Pipeline:
 
         arguments = arguments.to_dict()
         arguments['get_graphs'] = 1
+        # pdbs are not required in the context of pipeline processing, reduce output size by not including it
+        arguments['pdb'] = 0
         bp_result = BayesPairing.bayespairing_string(arguments)
 
         # if we have an error, just return the error response

@@ -4,7 +4,7 @@
 import requests 
 URL = "http://0.0.0.0:5003/"
 
-def vernalSimilarityFunction(representative_graphs, dataset):
+def vernal_similarity_function(representative_graphs, dataset):
 
     data = {"graphs": str(representative_graphs), "dataset": dataset}
     headers = {}

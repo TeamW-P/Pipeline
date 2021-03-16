@@ -1,7 +1,9 @@
 from flask import abort
 from .BayesPairingController import BayesPairing
 from .RnaMigosController import RnaMigos
+from .VernalController import Vernal
 import json
+
 
 class Pipeline:
 
@@ -17,6 +19,7 @@ class Pipeline:
         bp_input = files.get("bp_input")
         vernal = arguments.get("vernal", default=1, type=int)
         rnamigos = arguments.get("rnamigos", default=1, type=int)
+        dataset = arguments.get("dataset", default="ALL", type=str)
 
         arguments = arguments.to_dict()
         arguments['get_graphs'] = 1
@@ -29,17 +32,24 @@ class Pipeline:
             return bp_result.status_code, bp_result.json()
 
         bp_data = bp_result.json()
-        motifs = bp_data.get("motif_graphs")
+        rep_graphs = str(bp_data.get("motif_graphs"))
         bp_data.pop("motif_graphs", None)
 
+        if rnamigos:
+            rnamigos_result = RnaMigos.rnamigos_string(rep_graphs)
+            if not rnamigos_result:
+                return rnamigos_result.status_code, rnamigos_result.json()
 
-        if rnamigos == 1:
-            rnamigos_result = RnaMigos.rnamigos_string(str(motifs))
-            if rnamigos_result.status_code == 200:
-                rnamigos_data = rnamigos_result.json()
-                bp_data["rnamigos_result"] = rnamigos_data
-                return rnamigos_result.status_code, bp_data
-        
+            bp_data["rnamigos_result"] = rnamigos_result.json()
+
+        if vernal:
+            vernal_result = Vernal.vernal_similarity_function(
+                rep_graphs, dataset)
+            if not vernal_result:
+                return vernal_result.status_code, vernal_result.json()
+
+            bp_data["similar_motifs"] = vernal_result.json()["vernalOutput"]
+
         return bp_result.status_code, bp_data
 
     @staticmethod
@@ -53,6 +63,7 @@ class Pipeline:
         '''
         vernal = arguments.get("vernal", default=1, type=int)
         rnamigos = arguments.get("rnamigos", default=1, type=int)
+        dataset = arguments.get("dataset", default="ALL", type=str)
 
         arguments = arguments.to_dict()
         arguments['get_graphs'] = 1
@@ -65,14 +76,22 @@ class Pipeline:
             return bp_result.status_code, bp_result.json()
 
         bp_data = bp_result.json()
-        motifs = bp_data.get("motif_graphs")
+        rep_graphs = str(bp_data.get("motif_graphs"))
         bp_data.pop("motif_graphs", None)
 
-        if rnamigos == 1:
-            rnamigos_result = RnaMigos.rnamigos_string(str(motifs))
-            if rnamigos_result.status_code == 200:
-                rnamigos_data = rnamigos_result.json()
-                bp_data["rnamigos_result"] = rnamigos_data
-                return rnamigos_result.status_code, bp_data
-        
+        if rnamigos:
+            rnamigos_result = RnaMigos.rnamigos_string(rep_graphs)
+            if not rnamigos_result:
+                return rnamigos_result.status_code, rnamigos_result.json()
+
+            bp_data["rnamigos_result"] = rnamigos_result.json()
+
+        if vernal:
+            vernal_result = Vernal.vernal_similarity_function(
+                rep_graphs, dataset)
+            if not vernal_result:
+                return vernal_result.status_code, vernal_result.json()
+
+            bp_data["similar_motifs"] = vernal_result.json()["vernalOutput"]
+
         return bp_result.status_code, bp_data

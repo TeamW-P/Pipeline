@@ -6,5 +6,5 @@ from services.Vernal import *
 class Vernal:
 
     @staticmethod
-    def vernalSimilarityFunction(representative_graphs, dataset):
-        return vernalSimilarityFunction(representative_graphs, dataset)
+    def vernal_similarity_function(representative_graphs, dataset):
+        return vernal_similarity_function(representative_graphs, dataset)

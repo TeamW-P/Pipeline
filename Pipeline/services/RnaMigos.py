@@ -12,9 +12,8 @@ def rnamigos_string(payload):
     :param payload: the payload to send
     :return: the raw response from RnaMigos
     '''
-    data = {"graphs": payload}
     files = []
     headers = {}
     response = requests.request(
-        "POST", URL + "rnamigos-string", headers=headers, data=data, files=files)
+        "POST", URL + "rnamigos-string", headers=headers, data=payload, files=files)
     return response

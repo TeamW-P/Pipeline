@@ -16,15 +16,16 @@ def pipeline_file():
     '''
     try:
         if ("bp_input" not in request.files):
-            abort("Did not receive an input file for BayesPairing")
+            raise Exception("Did not receive an input file for BayesPairing")
 
         code, result = Pipeline.pipeline_file(request.form, request.files)
         if (code == 200):
             return jsonify(result)
 
-        abort(code, result.get("error"))
     except Exception as e:
         abort(400, "Pipeline failed to process data. Please check your inputs. Error: " + str(e))
+
+    abort(code, result.get("error"))
 
 
 @routes.route('/pipeline-string', methods=['POST'])
@@ -36,57 +37,16 @@ def pipeline_string():
     '''
     try:
         if ("sequence" not in request.form):
-            abort("Did not receive arguments for BayesPairing.")
+            raise Exception("Did not receive arguments for BayesPairing.")
 
         code, result = Pipeline.pipeline_string(request.form, request.files)
         if (code == 200):
             return jsonify(result)
 
-
-        abort(code, result.get("error"))
     except Exception as e:
         abort(400, "Pipeline failed to process data. Please check your inputs. Error: " + str(e))
 
-
-@routes.route('/bayespairing-file', methods=['POST'])
-def bayespairing_file():
-    '''
-    Represents the BayesPairing endpoint for file input.
-
-    :returns: jsonified BayesPairing output
-    '''
-    try:
-        if "bp_input" not in request.files:
-            abort(400, description="Did not receive an input file.")
-        if not request.form:
-            abort(400, description="Did not receive any arguments.")
-        result = BayesPairing.bayespairing_file(
-            request.form.to_dict(), request.files.get("bp_input"))
-        if (result):
-            return result.json()
-
-        abort(result.status_code, result.json().get("error"))
-    except Exception as e:
-        abort(400, "BayesPairing failed to process data. Please check your inputs. Error: " + str(e))
-
-
-@routes.route('/bayespairing-string', methods=['POST'])
-def bayespairing_string():
-    '''
-    Represents the BayesPairing endpoint for string input.
-
-    :returns: jsonified BayesPairing output
-    '''
-    try:
-        if not request.form or "sequence" not in request.form:
-            abort(400, description="Did not receive any arguments.")
-        result = BayesPairing.bayespairing_string(request.form.to_dict())
-        if (result):
-            return result.json()
-
-        abort(result.status_code, result.json().get("error"))
-    except Exception as e:
-        abort(400, "BayesPairing failed to process data. Please check your inputs. Error: " + str(e))
+    abort(code, result.get("error"))
 
 
 @routes.route('/graphs', methods=['POST'])
@@ -98,13 +58,13 @@ def get_graphs_per_module():
     '''
     try:
         if "modules" not in request.form:
-            abort(400, description="Did not receive any modules.")
+            raise Exception("Did not receive any modules.")
+
         result = BayesPairing.get_graphs_per_module(
             request.form.get("modules"))
         if (result):
             return result.json()
 
-        print(result.json().get("error"))
         abort(result.status_code, result.json().get("error"))
     except Exception as e:
         abort(400, "Failed to retrieve representative graphs. Please check your inputs. Error: " + str(e))
@@ -115,27 +75,39 @@ def rnamigos_string():
     '''
     For future use cases: Represents the RnaMigos endpoint for string input.
 
-    :returns: RnaMigos BayesPairing output
+    :returns: RnaMigos output
     '''
     try:
-        if not request.form or "graphs" not in request.form:
-            abort(400, description="Did not receive any arguments.")
-        result = RnaMigos.rnamigos_string(request.form.to_dict())
+        if not "graphs" not in request.form:
+            raise Exception("Did not receive any arguments.")
+
+        result = RnaMigos.rnamigos_string(request.form["graphs"])
         if (result):
             return result.json()
 
-        abort(result.status_code, result.json().get("error"))
     except Exception as e:
-        abort(400, "RnaMigos failed to process data. Please check your inputs or BayesPairing. Error: " + str(e))
+        abort(400, "RnaMigos failed to process data. Error: " + str(e))
+
+    abort(result.status_code, result.json().get("error"))
+
 
 @routes.route('/vernal', methods=['POST'])
-def vernal_execution():
-    try: 
-        output = Vernal.vernalSimilarityFunction(representative_graphs=request.form.get("graphs"), dataset=request.form.get("dataset"))
-        return output.json()
+def vernal_similarity_function():
+    '''
+    For future use cases: Given graphs, retrieve similar motifs.
+
+    :returns: similar motifs
+    '''
+    try:
+        if ("graphs" not in request.form):
+            raise Exception("Did not receive any arguments.")
+
+        result = Vernal.vernal_similarity_function(request.form.to_dict())
+
+        if (result):
+            return result.json()
+
     except Exception as e:
         abort(400, "Vernal encountered an error while processing data: " + str(e))
 
-
-
-
+    abort(result.status_code, result.json().get("error"))

@@ -40,19 +40,19 @@ class PipelineStringInputTests(unittest.TestCase):
         Tests for a successful pipeline run where RNAmigos is not run (file input)
         '''
 
-    def test_failure_invalid_file_format(self):
+    def test_failure_bp(self):
         '''
-        Tests for a failure case where an illegal file format is provided
-        '''
-
-    def test_failure_invalid_fasta(self):
-        '''
-        Tests for a failure case where an invalid file format is provided
+        Tests for a failure case where a failure occurred in BayesPairing
         '''
 
-    def test_failure_incorrect_dataset(self):
+    def test_failure_vernal(self):
         '''
-        Tests for a failure case where an invalid dataset is provided
+        Tests for a failure case where a failure occurred in VeRNAl
+        '''
+
+    def test_failure_rnamigos(self):
+        '''
+        Tests for a failure case where a failure occurred in RNAmigos
         '''
 
     def test_failure_no_arguments(self):

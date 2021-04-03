@@ -14,18 +14,18 @@ CURRENT_DIRECTORY = os.path.dirname(__file__)
 # NOTE: For boolean based comparisons, we still use assertEquals so there is no need to update code in the case of a new response (i.e. you only need to change the expected response JSONs)
 
 
-class PipelineFileInputTests(unittest.TestCase):
+class PipelineStringInputTests(unittest.TestCase):
     '''
-    Implements unit testing for the file input endpoint.
+    Implements unit testing for the string input endpoint.
     '''
 
     def setUp(self):
         self.app = app.test_client()
 
     @patch('requests.request')
-    def test_success_file_all(self, mock_post):
+    def test_success_string_all(self, mock_post):
         '''
-        Tests for a successful pipeline run where all 3 tools are run (file input)
+        Tests for a successful pipeline run where all 3 tools are run (string input)
         '''
         with open(os.path.join(CURRENT_DIRECTORY, "responses/mock_responses/RESPONSE_BP_STRING.json")) as f:
             bp_response = json.load(f)
@@ -54,9 +54,9 @@ class PipelineFileInputTests(unittest.TestCase):
         self.assertTrue("rnamigos_result" in response.json)
 
     @patch('requests.request')
-    def test_success_file_bp_only(self, mock_post):
+    def test_success_string_bp_only(self, mock_post):
         '''
-        Tests for a successful pipeline run where only BP is run (file input)
+        Tests for a successful pipeline run where only BP is run (string input)
         '''
         with open(os.path.join(CURRENT_DIRECTORY, "responses/mock_responses/RESPONSE_BP_STRING.json")) as f:
             bp_response = json.load(f)
@@ -78,39 +78,139 @@ class PipelineFileInputTests(unittest.TestCase):
         self.assertTrue("similar_motifs" not in response.json)
         self.assertTrue("rnamigos_result" not in response.json)
 
-    def test_success_file_no_vernal(self):
+    @patch('requests.request')
+    def test_success_string_no_vernal(self, mock_post):
         '''
-        Tests for a successful pipeline run where VeRNAl is not run (file input)
+        Tests for a successful pipeline run where VeRNAl is not run (string input)
         '''
+        with open(os.path.join(CURRENT_DIRECTORY, "responses/mock_responses/RESPONSE_BP_STRING.json")) as f:
+            bp_response = json.load(f)
+        with open(os.path.join(CURRENT_DIRECTORY, "responses/mock_responses/RESPONSE_PIPELINE_STRING_RNAMIGOS.json")) as f:
+            rnamigos_response = json.load(f)
 
-    def test_success_file_no_rnamigos(self):
-        '''
-        Tests for a successful pipeline run where RNAmigos is not run (file input)
-        '''
+        # use side effect when you need to mock multiple calls
+        # in-order of calls
+        mock_post.side_effect = [self.MockResponse(bp_response, 200), self.MockResponse(
+            rnamigos_response, 200)]
 
-    def test_failure_bp(self):
+        payload = STRING_INPUT_NO_VERNAL
+        headers = {}
+
+        response = self.app.post(
+            PL_STRING_URL, content_type='multipart/form-data', headers=headers, data=payload)
+        with open(os.path.join(CURRENT_DIRECTORY, "responses/responses/PIPELINE_STRING_NO_VERNAL.json")) as f:
+            expected_response = json.load(f)
+        f.close()
+
+        self.assertEqual(200, response.status_code)
+        self.compare_core(expected_response, response.json)
+        self.assertTrue("rnamigos_result" in response.json)
+        self.assertTrue("similar_motifs" not in response.json)
+
+    @patch('requests.request')
+    def test_success_string_no_rnamigos(self, mock_post):
+        '''
+        Tests for a successful pipeline run where RNAmigos is not run (string input)
+        '''
+        with open(os.path.join(CURRENT_DIRECTORY, "responses/mock_responses/RESPONSE_BP_STRING.json")) as f:
+            bp_response = json.load(f)
+        with open(os.path.join(CURRENT_DIRECTORY, "responses/mock_responses/RESPONSE_PIPELINE_STRING_VERNAL.json")) as f:
+            vernal_response = json.load(f)
+
+        # use side effect when you need to mock multiple calls
+        # in-order of calls
+        mock_post.side_effect = [self.MockResponse(bp_response, 200), self.MockResponse(
+            vernal_response, 200)]
+
+        payload = STRING_INPUT_NO_RNAMIGOS
+        headers = {}
+
+        response = self.app.post(
+            PL_STRING_URL, content_type='multipart/form-data', headers=headers, data=payload)
+        with open(os.path.join(CURRENT_DIRECTORY, "responses/responses/PIPELINE_STRING_NO_RNAMIGOS.json")) as f:
+            expected_response = json.load(f)
+        f.close()
+
+        self.assertEqual(200, response.status_code)
+        self.compare_core(expected_response, response.json)
+        self.assertTrue("rnamigos_result" not in response.json)
+        self.assertTrue("similar_motifs" in response.json)
+
+    @patch('requests.request')
+    def test_failure_bp(self, mock_post):
         '''
         Tests for a failure case where a failure occurred in BayesPairing
         '''
-        # do not worry about the payload here, you can use the success case payload since we are mocking the output anyways
-        # sample error response with a 400 code and a dictionary {"error":"message"}. no need for a specific message, you can simply say "BP failed"
+        with open(os.path.join(CURRENT_DIRECTORY, "responses/mock_responses/RESPONSE_BP_ERROR.json")) as f:
+            bp_response = json.load(f)
+        f.close()
 
-    def test_failure_vernal(self):
+        mock_post.return_value = self.MockResponse(bp_response, 400)
+
+        payload = STRING_INPUT_FULL
+        headers = {}
+
+        response = self.app.post(
+            PL_STRING_URL, content_type='multipart/form-data', headers=headers, data=payload)
+        
+        self.assertEqual(400, response.status_code)
+
+    @patch('requests.request')
+    def test_failure_vernal(self, mock_post):
         '''
         Tests for a failure case where a failure occurred in VeRNAl
         '''
-        # do not worry about the payload here, you can use the success case payload since we are mocking the output anyways
+        with open(os.path.join(CURRENT_DIRECTORY, "responses/mock_responses/RESPONSE_VERNAL_ERROR.json")) as f:
+            bp_response = json.load(f)
+        f.close()
 
-    def test_failure_rnamigos(self):
+        mock_post.return_value = self.MockResponse(bp_response, 400)
+
+        payload = STRING_INPUT_FULL
+        headers = {}
+
+        response = self.app.post(
+            PL_STRING_URL, content_type='multipart/form-data', headers=headers, data=payload)
+        
+        self.assertEqual(400, response.status_code)
+
+    @patch('requests.request')
+    def test_failure_rnamigos(self, mock_post):
         '''
         Tests for a failure case where a failure occurred in RNAmigos
         '''
-        # do not worry about the payload here, you can use the success case payload since we are mocking the output anyways
+        with open(os.path.join(CURRENT_DIRECTORY, "responses/mock_responses/RESPONSE_RNAMIGOS_ERROR.json")) as f:
+            bp_response = json.load(f)
+        f.close()
 
-    def test_failure_no_arguments(self):
+        mock_post.return_value = self.MockResponse(bp_response, 400)
+
+        payload = STRING_INPUT_FULL
+        headers = {}
+
+        response = self.app.post(
+            PL_STRING_URL, content_type='multipart/form-data', headers=headers, data=payload)
+        
+        self.assertEqual(400, response.status_code)
+
+    @patch('requests.request')
+    def test_failure_no_arguments(self, mock_post):
         '''
         Tests for a failure case where an no arguments are provided
         '''
+        with open(os.path.join(CURRENT_DIRECTORY, "responses/mock_responses/RESPONSE_PIPELINE_EMPTY_ARGS_ERROR.json")) as f:
+            pipeline_empty_args_response = json.load(f)
+        f.close()
+
+        mock_post.return_file = self.MockResponse(pipeline_empty_args_response, 400)
+        
+        payload = {}
+        headers = {}
+
+        response = self.app.post(
+            PL_STRING_URL, content_type='multipart/form-data', headers=headers, data=payload)
+        
+        self.assertEqual(400, response.status_code)
 
     def compare_core(self, expected, received):
         self.assertEqual("all_hits" in expected, "all_hits" in received)

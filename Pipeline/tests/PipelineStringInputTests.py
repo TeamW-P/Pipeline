@@ -47,7 +47,6 @@ class PipelineStringInputTests(unittest.TestCase):
             PL_STRING_URL, content_type='multipart/form-data', headers=headers, data=payload)
         with open(os.path.join(CURRENT_DIRECTORY, "responses/responses/PIPELINE_STRING_SUCCESS.json")) as f:
             expected_response = json.load(f)
-        f.close()
 
         self.assertEqual(200, response.status_code)
         self.compare_core(expected_response, response.json)
@@ -61,7 +60,6 @@ class PipelineStringInputTests(unittest.TestCase):
         '''
         with open(os.path.join(CURRENT_DIRECTORY, "responses/mock_responses/RESPONSE_BP_STRING.json")) as f:
             bp_response = json.load(f)
-        f.close()
 
         mock_post.return_value = MockResponse(bp_response, 200)
 
@@ -72,7 +70,6 @@ class PipelineStringInputTests(unittest.TestCase):
             PL_STRING_URL, content_type='multipart/form-data', headers=headers, data=payload)
         with open(os.path.join(CURRENT_DIRECTORY, "responses/responses/PIPELINE_STRING_BP_ONLY.json")) as f:
             expected_response = json.load(f)
-        f.close()
 
         self.assertEqual(200, response.status_code)
         self.compare_core(expected_response, response.json)
@@ -101,7 +98,6 @@ class PipelineStringInputTests(unittest.TestCase):
             PL_STRING_URL, content_type='multipart/form-data', headers=headers, data=payload)
         with open(os.path.join(CURRENT_DIRECTORY, "responses/responses/PIPELINE_STRING_NO_VERNAL.json")) as f:
             expected_response = json.load(f)
-        f.close()
 
         self.assertEqual(200, response.status_code)
         self.compare_core(expected_response, response.json)
@@ -130,7 +126,6 @@ class PipelineStringInputTests(unittest.TestCase):
             PL_STRING_URL, content_type='multipart/form-data', headers=headers, data=payload)
         with open(os.path.join(CURRENT_DIRECTORY, "responses/responses/PIPELINE_STRING_NO_RNAMIGOS.json")) as f:
             expected_response = json.load(f)
-        f.close()
 
         self.assertEqual(200, response.status_code)
         self.compare_core(expected_response, response.json)
@@ -144,7 +139,6 @@ class PipelineStringInputTests(unittest.TestCase):
         '''
         with open(os.path.join(CURRENT_DIRECTORY, "responses/mock_responses/RESPONSE_BP_ERROR.json")) as f:
             bp_response = json.load(f)
-        f.close()
 
         mock_post.return_value = MockResponse(bp_response, 400)
 
@@ -163,7 +157,6 @@ class PipelineStringInputTests(unittest.TestCase):
         '''
         with open(os.path.join(CURRENT_DIRECTORY, "responses/mock_responses/RESPONSE_VERNAL_ERROR.json")) as f:
             bp_response = json.load(f)
-        f.close()
 
         mock_post.return_value = MockResponse(bp_response, 400)
 
@@ -182,7 +175,6 @@ class PipelineStringInputTests(unittest.TestCase):
         '''
         with open(os.path.join(CURRENT_DIRECTORY, "responses/mock_responses/RESPONSE_RNAMIGOS_ERROR.json")) as f:
             bp_response = json.load(f)
-        f.close()
 
         mock_post.return_value = MockResponse(bp_response, 400)
 
@@ -201,7 +193,6 @@ class PipelineStringInputTests(unittest.TestCase):
         '''
         with open(os.path.join(CURRENT_DIRECTORY, "responses/mock_responses/RESPONSE_PIPELINE_EMPTY_ARGS_ERROR.json")) as f:
             pipeline_empty_args_response = json.load(f)
-        f.close()
 
         mock_post.return_file = MockResponse(pipeline_empty_args_response, 400)
 

@@ -45,9 +45,10 @@ class PipelineFileInputTests(unittest.TestCase):
         headers = {}
 
         with open(os.path.join(CURRENT_DIRECTORY, "data/INPUT_SEQUENCE.fa"), mode="rb") as f:
-            payload["bp_input"] = f
-            response = self.app.post(
-                PL_FILE_URL, content_type='multipart/form-data', headers=headers, data=payload)
+            payload["bp_input"] = (io.BytesIO(f.read()), "INPUT_SEQUENCE.fa")
+
+        response = self.app.post(
+            PL_FILE_URL, content_type='multipart/form-data', headers=headers, data=payload)
 
         with open(os.path.join(CURRENT_DIRECTORY, "responses/responses/PIPELINE_FILE_SUCCESS.json")) as f:
             expected_response = json.load(f)
@@ -71,9 +72,10 @@ class PipelineFileInputTests(unittest.TestCase):
         headers = {}
 
         with open(os.path.join(CURRENT_DIRECTORY, "data/INPUT_SEQUENCE.fa"), mode="rb") as f:
-            payload["bp_input"] = f
-            response = self.app.post(
-                PL_FILE_URL, content_type='multipart/form-data', headers=headers, data=payload)
+            payload["bp_input"] = (io.BytesIO(f.read()), "INPUT_SEQUENCE.fa")
+
+        response = self.app.post(
+            PL_FILE_URL, content_type='multipart/form-data', headers=headers, data=payload)
 
         with open(os.path.join(CURRENT_DIRECTORY, "responses/responses/PIPELINE_FILE_BP_ONLY.json")) as f:
             expected_response = json.load(f)
@@ -101,9 +103,10 @@ class PipelineFileInputTests(unittest.TestCase):
         headers = {}
 
         with open(os.path.join(CURRENT_DIRECTORY, "data/INPUT_SEQUENCE.fa"), mode="rb") as f:
-            payload["bp_input"] = f
-            response = self.app.post(
-                PL_FILE_URL, content_type='multipart/form-data', headers=headers, data=payload)
+            payload["bp_input"] = (io.BytesIO(f.read()), "INPUT_SEQUENCE.fa")
+
+        response = self.app.post(
+            PL_FILE_URL, content_type='multipart/form-data', headers=headers, data=payload)
 
         with open(os.path.join(CURRENT_DIRECTORY, "responses/responses/PIPELINE_FILE_NO_VERNAL.json")) as f:
             expected_response = json.load(f)
@@ -130,9 +133,10 @@ class PipelineFileInputTests(unittest.TestCase):
         headers = {}
 
         with open(os.path.join(CURRENT_DIRECTORY, "data/INPUT_SEQUENCE.fa"), mode="rb") as f:
-            payload["bp_input"] = f
-            response = self.app.post(
-                PL_FILE_URL, content_type='multipart/form-data', headers=headers, data=payload)
+            payload["bp_input"] = (io.BytesIO(f.read()), "INPUT_SEQUENCE.fa")
+
+        response = self.app.post(
+            PL_FILE_URL, content_type='multipart/form-data', headers=headers, data=payload)
 
         with open(os.path.join(CURRENT_DIRECTORY, "responses/responses/PIPELINE_FILE_NO_RNAMIGOS.json")) as f:
             expected_response = json.load(f)
@@ -156,9 +160,10 @@ class PipelineFileInputTests(unittest.TestCase):
         headers = {}
 
         with open(os.path.join(CURRENT_DIRECTORY, "data/INVALID_FASTA.fa"), mode="rb") as f:
-            payload["bp_input"] = f
-            response = self.app.post(
-                PL_FILE_URL, content_type='multipart/form-data', headers=headers, data=payload)
+            payload["bp_input"] = (io.BytesIO(f.read()), "INPUT_SEQUENCE.fa")
+
+        response = self.app.post(
+            PL_FILE_URL, content_type='multipart/form-data', headers=headers, data=payload)
 
         self.assertEqual(400, response.status_code)
 
@@ -176,9 +181,10 @@ class PipelineFileInputTests(unittest.TestCase):
         headers = {}
 
         with open(os.path.join(CURRENT_DIRECTORY, "data/INPUT_SEQUENCE.fa"), mode="rb") as f:
-            payload["bp_input"] = f
-            response = self.app.post(
-                PL_FILE_URL, content_type='multipart/form-data', headers=headers, data=payload)
+            payload["bp_input"] = (io.BytesIO(f.read()), "INPUT_SEQUENCE.fa")
+
+        response = self.app.post(
+            PL_FILE_URL, content_type='multipart/form-data', headers=headers, data=payload)
 
         self.assertEqual(400, response.status_code)
 
@@ -196,9 +202,10 @@ class PipelineFileInputTests(unittest.TestCase):
         headers = {}
 
         with open(os.path.join(CURRENT_DIRECTORY, "data/INPUT_SEQUENCE.fa"), mode="rb") as f:
-            payload["bp_input"] = f
-            response = self.app.post(
-                PL_FILE_URL, content_type='multipart/form-data', headers=headers, data=payload)
+            payload["bp_input"] = (io.BytesIO(f.read()), "INPUT_SEQUENCE.fa")
+
+        response = self.app.post(
+            PL_FILE_URL, content_type='multipart/form-data', headers=headers, data=payload)
 
         self.assertEqual(400, response.status_code)
 

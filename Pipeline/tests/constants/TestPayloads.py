@@ -45,7 +45,7 @@ STRING_INPUT_NO_RNAMIGOS = {'dataset': 'ALL',
                         'step_size': '100',
                         'modules': '',
                         'constraints': '',
-                        'vernal': '0',
+                        'vernal': '1',
                         'rnamigos': '0'}
 STRING_INPUT_INCORRECT_DATASET = {'dataset': 'BAD',
                                   'sequence': 'UUUUUUAAGGAAGAUCUGGCCUUCCCACAAGGGAAGGCCAAAGAAUUUCCUU'}
@@ -91,7 +91,7 @@ FILE_INPUT_NO_RNAMIGOS = {'dataset': 'ALL',
                         'step_size': '100',
                         'modules': '',
                         'constraints': '',
-                        'vernal': '0',
+                        'vernal': '1',
                         'rnamigos': '0'}
 
 # GRAPH RETRIEVAL

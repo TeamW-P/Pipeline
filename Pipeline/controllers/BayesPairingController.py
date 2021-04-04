@@ -24,12 +24,11 @@ class BayesPairing:
         :returns: the response from the BayesPairing service
         '''
         input.seek(0)
-        temp = tempfile.NamedTemporaryFile(
-            suffix="." + input.filename.rsplit(".", 1)[1])
-        temp.write(input.read())
-        temp.seek(0)
-        result = bayespairing_file(arguments, temp.name)
-        temp.close()
+        with (tempfile.NamedTemporaryFile(
+            suffix="." + input.filename.rsplit(".", 1)[1])) as temp:
+            temp.write(input.read())
+            temp.seek(0)
+            result = bayespairing_file(arguments, temp.name)
         return result
 
     @staticmethod

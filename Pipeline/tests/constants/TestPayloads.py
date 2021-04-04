@@ -99,9 +99,3 @@ FILE_INPUT_NO_RNAMIGOS = {'dataset': 'ALL',
 GRAPH_RETRIEVAL_SUCCESS = {'dataset': 'ALL',
                            'modules': '["36", "48"]'
                            }
-GRAPH_RETRIEVAL_EMPTY_MODULES = {'dataset': 'ALL',
-                                 'modules': '[]'}
-GRAPH_RETRIEVAL_BAD_DATASET = {'dataset': 'ILLEGAL',
-                               'modules': '["36", "48"]'}
-GRAPH_RETRIEVAL_INVALID_MODULE = {'dataset': 'ALL',
-                                  'modules': '["36", "1000"]'}

@@ -3,11 +3,12 @@ import json
 import os
 from .constants.TestPayloads import *
 from .constants.TestEnvironment import *
+from .utils.MockResponse import *
 # relative paths refuse to work because Python is terrible!
 from app import app
 import io
 from mock import patch, Mock
-import json
+
 CURRENT_DIRECTORY = os.path.dirname(__file__)
 
 # IMPORTANT NOTE: BP Results are not deterministic. To that effect, these tests validate the existence of keys and whether responses are successful or a failure
@@ -36,8 +37,8 @@ class PipelineStringInputTests(unittest.TestCase):
 
         # use side effect when you need to mock multiple calls
         # in-order of calls
-        mock_post.side_effect = [self.MockResponse(bp_response, 200), self.MockResponse(
-            rnamigos_response, 200), self.MockResponse(vernal_response, 200)]
+        mock_post.side_effect = [MockResponse(bp_response, 200), MockResponse(
+            rnamigos_response, 200), MockResponse(vernal_response, 200)]
 
         payload = STRING_INPUT_FULL
         headers = {}
@@ -62,7 +63,7 @@ class PipelineStringInputTests(unittest.TestCase):
             bp_response = json.load(f)
         f.close()
 
-        mock_post.return_value = self.MockResponse(bp_response, 200)
+        mock_post.return_value = MockResponse(bp_response, 200)
 
         payload = STRING_INPUT_BP_ONLY
         headers = {}
@@ -90,7 +91,7 @@ class PipelineStringInputTests(unittest.TestCase):
 
         # use side effect when you need to mock multiple calls
         # in-order of calls
-        mock_post.side_effect = [self.MockResponse(bp_response, 200), self.MockResponse(
+        mock_post.side_effect = [MockResponse(bp_response, 200), MockResponse(
             rnamigos_response, 200)]
 
         payload = STRING_INPUT_NO_VERNAL
@@ -119,7 +120,7 @@ class PipelineStringInputTests(unittest.TestCase):
 
         # use side effect when you need to mock multiple calls
         # in-order of calls
-        mock_post.side_effect = [self.MockResponse(bp_response, 200), self.MockResponse(
+        mock_post.side_effect = [MockResponse(bp_response, 200), MockResponse(
             vernal_response, 200)]
 
         payload = STRING_INPUT_NO_RNAMIGOS
@@ -145,14 +146,14 @@ class PipelineStringInputTests(unittest.TestCase):
             bp_response = json.load(f)
         f.close()
 
-        mock_post.return_value = self.MockResponse(bp_response, 400)
+        mock_post.return_value = MockResponse(bp_response, 400)
 
         payload = STRING_INPUT_FULL
         headers = {}
 
         response = self.app.post(
             PL_STRING_URL, content_type='multipart/form-data', headers=headers, data=payload)
-        
+
         self.assertEqual(400, response.status_code)
 
     @patch('requests.request')
@@ -164,14 +165,14 @@ class PipelineStringInputTests(unittest.TestCase):
             bp_response = json.load(f)
         f.close()
 
-        mock_post.return_value = self.MockResponse(bp_response, 400)
+        mock_post.return_value = MockResponse(bp_response, 400)
 
         payload = STRING_INPUT_FULL
         headers = {}
 
         response = self.app.post(
             PL_STRING_URL, content_type='multipart/form-data', headers=headers, data=payload)
-        
+
         self.assertEqual(400, response.status_code)
 
     @patch('requests.request')
@@ -183,14 +184,14 @@ class PipelineStringInputTests(unittest.TestCase):
             bp_response = json.load(f)
         f.close()
 
-        mock_post.return_value = self.MockResponse(bp_response, 400)
+        mock_post.return_value = MockResponse(bp_response, 400)
 
         payload = STRING_INPUT_FULL
         headers = {}
 
         response = self.app.post(
             PL_STRING_URL, content_type='multipart/form-data', headers=headers, data=payload)
-        
+
         self.assertEqual(400, response.status_code)
 
     @patch('requests.request')
@@ -202,14 +203,14 @@ class PipelineStringInputTests(unittest.TestCase):
             pipeline_empty_args_response = json.load(f)
         f.close()
 
-        mock_post.return_file = self.MockResponse(pipeline_empty_args_response, 400)
-        
+        mock_post.return_file = MockResponse(pipeline_empty_args_response, 400)
+
         payload = {}
         headers = {}
 
         response = self.app.post(
             PL_STRING_URL, content_type='multipart/form-data', headers=headers, data=payload)
-        
+
         self.assertEqual(400, response.status_code)
 
     def compare_core(self, expected, received):
@@ -220,19 +221,3 @@ class PipelineStringInputTests(unittest.TestCase):
         self.assertEqual("params" in expected, "params" in received)
         self.assertEqual("motif_graphs" not in expected,
                          "motif_graphs" not in received)
-
-    class MockResponse:
-        '''
-        A response object similar to Requests Response
-
-        This is mocked instead of setting the values individually or the original Response class because .json() 
-        will fail if you simply do mock.return_value = json or use the Response class. As a result, we mock
-        the entire object
-        '''
-
-        def __init__(self, json_data, status_code):
-            self.json_data = json_data
-            self.status_code = status_code
-
-        def json(self):
-            return self.json_data

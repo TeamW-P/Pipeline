@@ -1,4 +1,4 @@
-from services.BayesPairing import bayespairing_string, bayespairing_file, get_graphs_per_module
+from services.BayesPairing import *
 import tempfile
 
 
@@ -25,7 +25,7 @@ class BayesPairing:
         '''
         input.seek(0)
         with (tempfile.NamedTemporaryFile(
-            suffix="." + input.filename.rsplit(".", 1)[1])) as temp:
+                suffix="." + input.filename.rsplit(".", 1)[1])) as temp:
             temp.write(input.read())
             temp.seek(0)
             result = bayespairing_file(arguments, temp.name)
@@ -41,3 +41,14 @@ class BayesPairing:
         '''
         payload = {"modules": modules}
         return get_graphs_per_module(payload)
+
+    @staticmethod
+    def get_module_info(modules, dataset):
+        '''
+        Retrieves module info for a given list of modules.
+
+        :param module: a stringified list of modules
+        :param dataset: the dataset to retrieve from
+        :returns: the response from the BayesPairing service
+        '''
+        return get_module_info(modules, dataset)

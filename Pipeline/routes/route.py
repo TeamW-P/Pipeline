@@ -65,10 +65,34 @@ def get_graphs_per_module():
         if (result):
             return result.json()
 
-        abort(result.status_code, result.json().get("error"))
     except Exception as e:
         abort(400, "Failed to retrieve representative graphs. Please check your inputs. Error: " + str(e))
 
+    abort(result.status_code, result.json().get("error"))
+
+
+@routes.route('/module-info', methods=['GET'])
+def get_module_info():
+    '''
+    Retrievies module info for a given list of modules.
+
+    :returns: jsonified output containing module information per module.
+    '''
+    try:
+        if "modules" not in request.args:
+            raise Exception("Did not receive any modules.")
+        
+        modules = request.args.get("modules", type = str)
+        dataset = request.args.get("dataset", default = "ALL", type = str)
+
+        result = BayesPairing.get_module_info(modules, dataset)
+        if (result):
+            return result.json()
+
+    except Exception as e:
+        abort(400, "Failed to retrieve representative graphs. Please check your inputs. Error: " + str(e))
+
+    abort(result.status_code, result.json().get("error"))
 
 @routes.route('/rnamigos-string', methods=['POST'])
 def rnamigos_string():

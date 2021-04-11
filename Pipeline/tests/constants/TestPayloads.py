@@ -99,3 +99,8 @@ FILE_INPUT_NO_RNAMIGOS = {'dataset': 'ALL',
 GRAPH_RETRIEVAL_SUCCESS = {'dataset': 'ALL',
                            'modules': '["36", "48"]'
                            }
+
+# MODULE INFO
+
+MODULE_INFO_RETRIEVAL_VALID_MODULES = "[\"36\", \"48\"]"
+MODULE_INFO_RETRIEVAL_ALL_DATASET = "ALL"

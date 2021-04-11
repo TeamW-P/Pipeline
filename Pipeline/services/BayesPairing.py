@@ -45,3 +45,21 @@ def get_graphs_per_module(payload):
     response = requests.request(
         "POST", URL + "graphs", headers=headers, data=payload, files=files)
     return response
+
+
+def get_module_info(modules, dataset):
+    '''
+    Makes a call to the BayesPairing endpoint to retrieve module information
+
+    :param module: a stringified list of modules
+    :param dataset: the dataset to retrieve from
+    :return: the raw response from BayesPairing
+    '''
+    files = []
+    headers = {}
+    payload = {}
+    url = f"{URL}module-info?dataset={dataset}&modules={modules}"
+
+    response = requests.request(
+        "GET", url, headers=headers, data=payload, files=files)
+    return response

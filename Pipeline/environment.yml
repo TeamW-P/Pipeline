@@ -1,8 +1,9 @@
-name: pipeline_env
+name: pipeline
 channels:
   - anaconda 
   - bioconda
 dependencies:
-  - python=3.6
+  - python=3.7
   - flask
   - gunicorn
+  - requests

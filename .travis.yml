@@ -13,9 +13,10 @@ before_install:
  - conda config --set always_yes yes --set changeps1 no
  - conda update -q conda
 install:
- - conda env create -f environment.yml
+ - conda env create -f Pipeline/environment.yml
  - conda activate pipeline
 script:
+ - cd Pipeline
  - python -m unittest tests.PipelineFileInputTests
  - python -m unittest tests.PipelineStringInputTests
  - python -m unittest tests.GraphRetrievalTests

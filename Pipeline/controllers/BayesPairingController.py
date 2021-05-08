@@ -32,15 +32,15 @@ class BayesPairing:
         return result
 
     @staticmethod
-    def get_graphs_per_module(modules):
+    def get_graphs_per_module(modules, dataset):
         '''
         Retrieves representative graphs given a list of modules.
 
-        :param modules: a list of modules
+        :param module: a stringified list of modules
+        :param dataset: the dataset to retrieve from
         :returns: the response from the BayesPairing service
         '''
-        payload = {"modules": modules}
-        return get_graphs_per_module(payload)
+        return get_graphs_per_module(modules, dataset)
 
     @staticmethod
     def get_module_info(modules, dataset):

@@ -24,7 +24,7 @@ class ModuleInfoRetrievalTests(unittest.TestCase):
         self.app = app.test_client()
 
     @patch('requests.request')
-    def test_succesful_request(self, mock_post):
+    def test_succesful_request(self, mock_get):
         '''
         Tests for a successful run of graph retrieval.
         '''
@@ -33,9 +33,9 @@ class ModuleInfoRetrievalTests(unittest.TestCase):
 
         payload = {}
         headers = {}
-        url = f"{MODULE_INFO_RETRIEVAL_URL}?{MODULE_INFO_RETRIEVAL_DATASET_KEY}={MODULE_INFO_RETRIEVAL_ALL_DATASET}&{MODULE_INFO_RETRIEVAL_MODULES_KEY}={MODULE_INFO_RETRIEVAL_VALID_MODULES}"
+        url = f"{MODULE_INFO_RETRIEVAL_URL}?{MODULE_INFO_RETRIEVAL_DATASET_KEY}={ALL_DATASET_NAME}&{MODULE_INFO_RETRIEVAL_MODULES_KEY}={MODULE_INFO_RETRIEVAL_VALID_MODULES}"
 
-        mock_post.return_value = MockResponse(mock_response, 200)
+        mock_get.return_value = MockResponse(mock_response, 200)
 
         response = self.app.get(
             url, headers=headers, data=payload)
@@ -47,7 +47,7 @@ class ModuleInfoRetrievalTests(unittest.TestCase):
         self.assertEqual(expected_response, response.json)
 
     @patch('requests.request')
-    def test_service_failure(self, mock_post):
+    def test_service_failure(self, mock_get):
         '''
         Tests for a run of graph retrieval where the service returns a failure.
         '''
@@ -57,9 +57,9 @@ class ModuleInfoRetrievalTests(unittest.TestCase):
         payload = {}
         headers = {}
         # payload is irrelevant since we are mocking a failure anyways
-        url = f"{MODULE_INFO_RETRIEVAL_URL}?{MODULE_INFO_RETRIEVAL_DATASET_KEY}={MODULE_INFO_RETRIEVAL_ALL_DATASET}&{MODULE_INFO_RETRIEVAL_MODULES_KEY}={MODULE_INFO_RETRIEVAL_VALID_MODULES}"
+        url = f"{MODULE_INFO_RETRIEVAL_URL}?{MODULE_INFO_RETRIEVAL_DATASET_KEY}={ALL_DATASET_NAME}&{MODULE_INFO_RETRIEVAL_MODULES_KEY}={MODULE_INFO_RETRIEVAL_VALID_MODULES}"
 
-        mock_post.return_value = MockResponse(mock_response, 400)
+        mock_get.return_value = MockResponse(mock_response, 400)
 
         response = self.app.get(
             url, headers=headers, data=payload)

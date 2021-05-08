@@ -33,17 +33,21 @@ def bayespairing_file(payload, input):
     return response
 
 
-def get_graphs_per_module(payload):
+def get_graphs_per_module(modules, dataset):
     '''
     Makes a call to the BayesPairing endpoint to retrieve representative graphs
 
-    :param payload: the payload to send
+    :param module: a stringified list of modules
+    :param dataset: the dataset to retrieve from
     :return: the raw response from BayesPairing
     '''
     files = []
     headers = {}
+    payload = {}
+    url = f"{URL}graphs?dataset={dataset}&modules={modules}"
+
     response = requests.request(
-        "POST", URL + "graphs", headers=headers, data=payload, files=files)
+        "GET", url, headers=headers, data=payload, files=files)
     return response
 
 

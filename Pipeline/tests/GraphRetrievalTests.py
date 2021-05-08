@@ -24,7 +24,7 @@ class GraphRetrievalTests(unittest.TestCase):
         self.app = app.test_client()
 
     @patch('requests.request')
-    def test_succesful_request(self, mock_post):
+    def test_succesful_request(self, mock_get):
         '''
         Tests for a successful run of graph retrieval.
         '''
@@ -32,13 +32,14 @@ class GraphRetrievalTests(unittest.TestCase):
             mock_response = json.load(f)
         f.close()
 
-        payload = GRAPH_RETRIEVAL_SUCCESS
+        payload = {}
         headers = {}
+        url = f"{GRAPH_RETRIEVAL_URL}?{GRAPH_RETRIEVAL_DATASET_KEY}={ALL_DATASET_NAME}&{GRAPH_RETRIEVAL_MODULES_KEY}={GRAPH_RETRIEVAL_VALID_MODULES}"
 
-        mock_post.return_value = MockResponse(mock_response, 200)
+        mock_get.return_value = MockResponse(mock_response, 200)
 
-        response = self.app.post(
-            GRAPH_RETRIEVAL_URL, content_type='multipart/form-data', headers=headers, data=payload)
+        response = self.app.get(
+            url, headers=headers, data=payload)
 
         with open(os.path.join(CURRENT_DIRECTORY, "responses/responses/GRAPH_RETRIEVAL_SUCCESS.json")) as f:
             expected_response = json.load(f)
@@ -48,7 +49,7 @@ class GraphRetrievalTests(unittest.TestCase):
         self.assertEqual(expected_response, response.json)
 
     @patch('requests.request')
-    def test_service_failure(self, mock_post):
+    def test_service_failure(self, mock_get):
         '''
         Tests for a run of graph retrieval where the service returns a failure.
         '''
@@ -56,14 +57,15 @@ class GraphRetrievalTests(unittest.TestCase):
             mock_response = json.load(f)
         f.close()
 
-        # payload is irrelevant since we are mocking a failure anyways
-        payload = GRAPH_RETRIEVAL_SUCCESS
+        payload = {}
         headers = {}
+        # payload is irrelevant since we are mocking a failure anyways
+        url = f"{GRAPH_RETRIEVAL_URL}?{GRAPH_RETRIEVAL_DATASET_KEY}={ALL_DATASET_NAME}&{GRAPH_RETRIEVAL_MODULES_KEY}={GRAPH_RETRIEVAL_VALID_MODULES}"
 
-        mock_post.return_value = MockResponse(mock_response, 400)
+        mock_get.return_value = MockResponse(mock_response, 400)
 
-        response = self.app.post(
-            GRAPH_RETRIEVAL_URL, content_type='multipart/form-data', headers=headers, data=payload)
+        response = self.app.get(
+            url, headers=headers, data=payload)
 
         self.assertEqual(400, response.status_code)
 
@@ -74,9 +76,7 @@ class GraphRetrievalTests(unittest.TestCase):
         payload = {}
         headers = {}
 
-        # TODO: Mock service calls
-
-        response = self.app.post(
-            GRAPH_RETRIEVAL_URL, content_type='multipart/form-data', headers=headers, data=payload)
+        response = self.app.get(
+            GRAPH_RETRIEVAL_URL, headers=headers, data=payload)
 
         self.assertEqual(400, response.status_code)

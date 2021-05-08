@@ -49,7 +49,7 @@ def pipeline_string():
     abort(code, result.get("error"))
 
 
-@routes.route('/graphs', methods=['POST'])
+@routes.route('/graphs', methods=['GET'])
 def get_graphs_per_module():
     '''
     Retrievies representative graphs given a list of modules.
@@ -57,11 +57,14 @@ def get_graphs_per_module():
     :returns: jsonified output containing a graph for each module
     '''
     try:
-        if "modules" not in request.form:
+        if "modules" not in request.args:
             raise Exception("Did not receive any modules.")
 
-        result = BayesPairing.get_graphs_per_module(
-            request.form.get("modules"))
+        modules = request.args.get("modules", type = str)
+        dataset = request.args.get("dataset", default = "ALL", type = str)
+
+        result = BayesPairing.get_graphs_per_module(modules, dataset)
+
         if (result):
             return result.json()
 

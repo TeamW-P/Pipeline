@@ -48,7 +48,7 @@ class Pipeline:
             if not vernal_result:
                 return vernal_result.status_code, vernal_result.json()
 
-            bp_data["similar_motifs"] = vernal_result.json()["vernalOutput"]
+            bp_data["similar_motifs"] = vernal_result.json()
         return bp_result.status_code, bp_data
 
     @staticmethod
@@ -91,5 +91,5 @@ class Pipeline:
             if not vernal_result:
                 return vernal_result.status_code, vernal_result.json()
 
-            bp_data["similar_motifs"] = vernal_result.json()["vernalOutput"]
+            bp_data["similar_motifs"] = vernal_result.json()
         return bp_result.status_code, bp_data
